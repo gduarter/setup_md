@@ -83,7 +83,7 @@ make
 ```
 
 Esse comando deve instalar `packmol` sem problemas na sua máquina virtual. 
-Tendo dificuldades, confira como pode resolver o problem [neste link](http://leandro.iqm.unicamp.br/m3g/packmol/userguide.shtml#comp)
+Tendo dificuldades, confira como pode resolver o problema [neste link](http://leandro.iqm.unicamp.br/m3g/packmol/userguide.shtml#comp)
 
 Digite no terminal
 
