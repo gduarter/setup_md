@@ -241,9 +241,8 @@ rcoulomb-switch          = 0
 rcoulomb                 = 1.2
 ; Dielectric constant (DC) for cut-off or DC of reaction field
 ; Method for doing Van der Waals
-vdw-type                 = Switch
+vdw-type                 = Cut-off
 ; cut-off lengths
-rvdw-switch              = 0.9
 rvdw                     = 1.0
 ; Apply long range dispersion corrections for Energy and Pressure
 DispCorr                 = AllEnerPres
@@ -332,7 +331,7 @@ vdw-type                 = Cut-off
 ; cut-off lengths
 rvdw                     = 1.0
 ; Apply long range dispersion corrections for Energy and Pressure
-DispCorr                 = EnerPres
+DispCorr                 = AllEnerPres
 ; Extension of the potential lookup tables beyond the cut-off
 ; Spacing for the PME/PPPM FFT grid
 fourierspacing           = 0.10
