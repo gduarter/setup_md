@@ -90,7 +90,7 @@ com a minimização.
 Para fazer a minimização, digite no terminal:
 
 ```
-gmx grompp -f minimization.mdp -c solute_in_solvent.gro -p solute_in_solvent.top
+gmx grompp -f minimization.mdp -c solute_in_solvent.gro -p solute_in_solvent.top -o minimization.tpr
 gmx mdrun -deffnm minimization
 ```
 
@@ -98,7 +98,8 @@ O primeiro comando organiza a simulação, o segundo faz a dinâmica molecular o
 a minimização rodar no seu computador. A _flag_ `-f` indica o arquivo `.mdp`,
 `-c` indica o arquivo `.gro` e `-p` indica o arquivo `.top`. O _output_ de
 interesse para nós é `minimization.gro` (nomeado pela _flag_ `-deffnm`), que
-contém a estrutura minimizada do sistema de interesse.
+contém a estrutura minimizada do sistema de interesse. `-o` é o _output_ com o
+sistema pronto para o programa `mdrun`.
 
 ### Equilibração
 Após a minimização a energia se encontra em um mínimo e o sistema
@@ -115,7 +116,7 @@ São três os estágios de equilibração:
  Para rodar esse estágio, lembre-se que a estrutura de partida está definida no
  _output_ da minimização:
  ```
- gmx grompp -f equil_nvt.mdp -c minimization.gro -p solute_in_solvent.top
+ gmx grompp -f equil_nvt.mdp -c minimization.gro -p solute_in_solvent.top -o equil_nvt.tpr
  gmx mdrun -deffnm equil_nvt
  ```
 
@@ -128,7 +129,7 @@ produzido pela etapa de equilíbrio da temperatura, pois cada átomo além de co
 suas coordenadas atômicas, também tem as componentes de sua velocidade em uma
 temperatura adequada:
 ```
-gmx grompp -f equil_npt.mdp -c equil_nvt.gro -p solute_in_solvent.top
+gmx grompp -f equil_npt.mdp -c equil_nvt.gro -p solute_in_solvent.top -o equil_npt.tpr
 gmx mdrun -deffnm equil_npt
 ```
 
@@ -139,7 +140,7 @@ anterior e este é que o comprimento dos lados da caixa podem variar de forma
 independente, enquanto isso não era o caso do estágio anterior. Para obter os
 resultados:
 ```
-gmx grompp -f equil_npt2.mdp -c equil_npt.gro -p solute_in_solvent.top
+gmx grompp -f equil_npt2.mdp -c equil_npt.gro -p solute_in_solvent.top -o equil_npt2.tpr
 gmx mdrun -deffnm equil_npt2
 ```
 
@@ -156,11 +157,11 @@ A produção resulta na criação de uma trajetória contendo configurações no
 isotérmico-isobárico (NPT) que podem ser usadas para calcular propriedades de
 equilíbrio do sistema. A simulação é rodada com os seguintes comandos:
 ```
-gmx grompp -f prod.mdp -c equil_npt2.gro -p solute_in_solvent.top
+gmx grompp -f prod.mdp -c equil_npt2.gro -p solute_in_solvent.top -o prod.tpr
 gmx mdrun -deffnm prod
 ```
 
-Todos os dados da trajetória estão armazenados em arquivos `.tpr`, `.trr` e
+Todos os dados da trajetória estão armazenados em arquivos `.trr` e
 `.edr` que podem ser analisados com outros programas incluídos no GROMACS.
 
 ### Troubleshooting
