@@ -51,7 +51,7 @@ tleap -f tl.in
 ```
 Essas linhas criam o arquivo `tl.in` e executam o programa `tleap`, que solvata
 o soluto em questão com o modelo `TIP3P` de água e cria dois arquivos, `molname.prmtop`
-e `molname.inpcrd`. Para criar os arquivo `.gro` e `.top` apropriados para o GROMACS,
+e `molname.inpcrd`. Para criar os arquivos `.gro` e `.top` apropriados para o GROMACS,
 use o script [`amber_to_gmx.py`](https://github.com/gduarter/setup_md/blob/master/zzz.scripts/amber_to_gmx.py).
 
 
