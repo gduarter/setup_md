@@ -38,6 +38,9 @@ Boas práticas de programação e design de protocolo, entretanto, dão preferê
 a formas mais compactas de apresentação dos dados. O usuário, se quiser, pode
 modificar os scripts e deixá-los mais ao gosto do cliente.
 
+Para maiores detalhes sobre o processo de preparação dos arquivos de _input_ leia 
+o tutorial deste [link](https://github.com/gduarter/setup_md/blob/master/zzz.markdown/small_molecule_prep.md).
+
 ## Organização dos arquivos
 
 O script `organize.sh` gerará três pastas:
