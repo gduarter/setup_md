@@ -599,7 +599,7 @@ EOF
 
         # Create production stage MDP file
         cat<<EOF > prod.mdp
-gromacs stuff
+;gromacs stuff
 ; RUN CONTROL PARAMETERS
 integrator               = sd
 ; Start time and timestep in ps
