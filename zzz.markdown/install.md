@@ -64,7 +64,7 @@ Aceite todas as condições que aparecerem na tela em cada uma dessas instalaç�
 
 ### 3 - Instalar pacotes não-incluídos no Miniconda
 
-Acesse o site [https://github.com/m3g/packmol/releases] e faça o download da 
+Acesse o site https://github.com/m3g/packmol/releases e faça o download da 
 versão mais recente do programa `packmol` no arquivo `tar.gz`.
 
 Para acessar o conteúdo e compilar o programa na sua máquina virtual, copie 
