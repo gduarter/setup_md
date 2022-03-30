@@ -35,8 +35,8 @@ packdir=${root}/004.packmol_files
 amberdir=${root}/005.amber_files
 
 # Define relevant numbers for packmol
-NTEMP=1
-NMONO=150
+NSOLU=1
+NSOLV=150
 
 # Define relevant numbers for gromacs
 temperature=298.15 #kelvin
@@ -140,14 +140,14 @@ filetype pdb # output file type
 # Create a box of ${name1} in ${name2} molecules
 #
 structure ${name1}.pdb
-number ${NTEMP} # Number of molecules
+number ${NSOLU} # Number of molecules
 resnumbers 3 # Sequential numbering
 inside cube 0. 0. 0. 30. # x, y, z coordinates of box, and length of box in Angstroms
 add_amber_ter
 end structure
 #
 structure ${name2}.pdb
-number ${NMONO} # Number of molecules
+number ${NSOLV} # Number of molecules
 resnumbers 3 # Sequential numbering
 inside cube 0. 0. 0. 30.
 add_amber_ter
