@@ -220,8 +220,8 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout                = 0
-xtc-precision            = 1000
+nstxtcout-compressed     = 0
+compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
 ; nblist update frequency
@@ -306,8 +306,8 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout                = 0
-xtc-precision            = 1000
+nstxtcout-compressed     = 0
+compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
 ; nblist update frequency
@@ -358,7 +358,6 @@ ref_t                    = ${temperature}
 ; Pressure coupling
 Pcoupl                   = no
 
-
 ; GENERATE VELOCITIES FOR STARTUP RUN
 gen_vel                  = yes
 gen_temp                 = ${temperature}
@@ -370,7 +369,7 @@ constraints              = hbonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
-unconstrained-start      = no
+continuation             = no
 ; Use successive overrelaxation to reduce the number of shake iterations
 Shake-SOR                = no
 ; Relative tolerance of shake
@@ -411,8 +410,8 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout                = 0
-xtc-precision            = 1000
+nstxtcout-compressed     = 0
+compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
 ; nblist update frequency
@@ -471,7 +470,7 @@ constraints              = hbonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
-unconstrained-start      = no
+continuation             = yes
 ; Use successive overrelaxation to reduce the number of shake iterations
 Shake-SOR                = no
 ; Relative tolerance of shake
@@ -516,8 +515,8 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout                = 0
-xtc-precision            = 1000
+nstxtcout-compressed     = 0
+compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
 ; nblist update frequency
@@ -576,7 +575,7 @@ constraints              = hbonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
-unconstrained-start      = no
+continuation             = yes
 ; Use successive overrelaxation to reduce the number of shake iterations
 Shake-SOR                = no
 ; Relative tolerance of shake
@@ -622,8 +621,8 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout                = 1000
-xtc-precision            = 1000
+nstxtcout-compressed     = 1000
+compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
 ; nblist update frequency
@@ -682,7 +681,7 @@ constraints              = hbonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
-unconstrained-start      = no
+continuation             = yes
 ; Use successive overrelaxation to reduce the number of shake iterations
 Shake-SOR                = no
 ; Relative tolerance of shake
