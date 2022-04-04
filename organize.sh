@@ -84,6 +84,8 @@ do
         mv ${molname}_renamed.pdb ${molname}.pdb
         # Creating simulation files
         antechamber -i ${molname}.pdb -fi pdb -o ${molname}.mol2 -fo mol2 -at gaff2 -c bcc -rn ${code} -nc 0
+        # Fix excess charges
+        python3 ${scriptdir}/fix_charges.py -m ${molname}.mol2
         echo "Starting parmchk2"
         parmchk2 -i ${molname}.mol2 -f mol2 -o ${molname}.frcmod
         rm sqm.*
