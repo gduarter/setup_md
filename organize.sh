@@ -220,7 +220,7 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout-compressed     = 0
+nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
@@ -306,7 +306,7 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout-compressed     = 0
+nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
@@ -410,7 +410,7 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout-compressed     = 0
+nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
@@ -515,7 +515,7 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout-compressed     = 0
+nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
@@ -621,7 +621,7 @@ nstcheckpoint            = 1000
 nstlog                   = 100
 nstenergy                = 100
 ; Output frequency and precision for xtc file
-nstxtcout-compressed     = 1000
+nstxout-compressed       = 1000
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
