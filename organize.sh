@@ -568,7 +568,7 @@ ref_t                    = ${temperature}
 Pcoupl                   = Parrinello-Rahman
 Pcoupltype               = isotropic
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
-tau_p                    = 1
+tau_p                    = 5
 compressibility          = 4.5e-5
 ref_p                    = ${pressure}
 
@@ -674,7 +674,7 @@ ref_t                    = ${temperature}
 Pcoupl                   = Parrinello-Rahman
 Pcoupltype               = isotropic
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
-tau_p                    = 1
+tau_p                    = 5
 compressibility          = 4.5e-5
 ref_p                    = ${pressure}
 

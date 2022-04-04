@@ -1,0 +1,13 @@
+source leaprc.gaff2
+
+BIP = loadmol2 biphenyl.mol2
+loadamberparams biphenyl.frcmod
+CHL = loadmol2 chloroform.mol2
+loadamberparams chloroform.frcmod
+
+fullbox = loadPdB biphenyl_in_chloroform.pdb
+
+setbox fullbox centers
+
+saveAmberParm fullbox biphenyl_in_chloroform.prmtop biphenyl_in_chloroform.inpcrd
+quit

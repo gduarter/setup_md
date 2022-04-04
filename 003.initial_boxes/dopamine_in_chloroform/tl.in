@@ -1,0 +1,13 @@
+source leaprc.gaff2
+
+DOP = loadmol2 dopamine.mol2
+loadamberparams dopamine.frcmod
+CHL = loadmol2 chloroform.mol2
+loadamberparams chloroform.frcmod
+
+fullbox = loadPdB dopamine_in_chloroform.pdb
+
+setbox fullbox centers
+
+saveAmberParm fullbox dopamine_in_chloroform.prmtop dopamine_in_chloroform.inpcrd
+quit

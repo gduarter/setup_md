@@ -1,0 +1,13 @@
+source leaprc.gaff2
+
+MEV = loadmol2 mevalonicacid.mol2
+loadamberparams mevalonicacid.frcmod
+BEN = loadmol2 benzene.mol2
+loadamberparams benzene.frcmod
+
+fullbox = loadPdB mevalonicacid_in_benzene.pdb
+
+setbox fullbox centers
+
+saveAmberParm fullbox mevalonicacid_in_benzene.prmtop mevalonicacid_in_benzene.inpcrd
+quit

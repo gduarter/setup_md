@@ -1,0 +1,13 @@
+source leaprc.gaff2
+
+BIP = loadmol2 biphenyl.mol2
+loadamberparams biphenyl.frcmod
+BEN = loadmol2 benzene.mol2
+loadamberparams benzene.frcmod
+
+fullbox = loadPdB biphenyl_in_benzene.pdb
+
+setbox fullbox centers
+
+saveAmberParm fullbox biphenyl_in_benzene.prmtop biphenyl_in_benzene.inpcrd
+quit

@@ -1,0 +1,13 @@
+source leaprc.gaff2
+
+MEV = loadmol2 mevalonicacid.mol2
+loadamberparams mevalonicacid.frcmod
+MET = loadmol2 methanol.mol2
+loadamberparams methanol.frcmod
+
+fullbox = loadPdB mevalonicacid_in_methanol.pdb
+
+setbox fullbox centers
+
+saveAmberParm fullbox mevalonicacid_in_methanol.prmtop mevalonicacid_in_methanol.inpcrd
+quit

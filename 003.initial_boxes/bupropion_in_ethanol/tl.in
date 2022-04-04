@@ -1,0 +1,13 @@
+source leaprc.gaff2
+
+BUP = loadmol2 bupropion.mol2
+loadamberparams bupropion.frcmod
+ETH = loadmol2 ethanol.mol2
+loadamberparams ethanol.frcmod
+
+fullbox = loadPdB bupropion_in_ethanol.pdb
+
+setbox fullbox centers
+
+saveAmberParm fullbox bupropion_in_ethanol.prmtop bupropion_in_ethanol.inpcrd
+quit
