@@ -563,7 +563,7 @@ tc-grps                  = System
 tau_t                    = 0.1
 ref_t                    = ${temperature}
 ; Pressure coupling
-Pcoupl                   = berendsen
+Pcoupl                   = Parrinello-Rahman
 Pcoupltype               = isotropic
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
 tau_p                    = 1
@@ -612,9 +612,9 @@ nstcomm                  = 1
 
 ; OUTPUT CONTROL OPTIONS
 ; Output frequency for coords (x), velocities (v) and forces (f)
-nstxout                  = 0
-nstvout                  = 0
-nstfout                  = 0
+nstxout                  = 1000
+nstvout                  = 1000
+nstfout                  = 1000
 ; Checkpointing helps you continue after crashes
 nstcheckpoint            = 1000
 ; Output frequency for energies to log file and energy file
@@ -669,7 +669,7 @@ tc-grps                  = System
 tau_t                    = 0.1
 ref_t                    = ${temperature}
 ; Pressure coupling
-Pcoupl                   = berendsen
+Pcoupl                   = Parrinello-Rahman
 Pcoupltype               = isotropic
 ; Time constant (ps), compressibility (1/bar) and reference P (bar)
 tau_p                    = 1
