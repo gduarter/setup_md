@@ -165,7 +165,8 @@ gmx mdrun -deffnm prod
 ```
 
 Todos os dados da trajetória estão armazenados em arquivos `.trr` e
-`.edr` que podem ser analisados com outros programas incluídos no GROMACS.
+`.xtc` que podem ser analisados com outros programas incluídos no GROMACS. Energias
+e outras grandezas físicas podem ser retiradas de arquivos `.edr`.
 
 ### Troubleshooting
 Caso alguma etapa tenha falhado, devemos conferir o arquivo `.log` produzido.
