@@ -63,7 +63,6 @@ conda install matplotlib
 conda install rdkit
 conda install -c conda-forge ambertools
 conda install -c omnia openmm
-conda install -c omnia mdtraj
 ```
 
 Aceite todas as condições que aparecerem na tela em cada uma dessas instalações.
