@@ -41,8 +41,14 @@ se o terminal retornar algo como `/usr/bin/python` sem referenciar `conda` ou
 `miniconda`, você deve executar o seguinte comando:
 
 ```
+source ~/.bashrc
+```
+ou
+```
 conda activate
 ```
+Caso prefira, feche e reabra o terminal que o efeito será o mesmo.
+
 
 ### 2 - Instalar os pacotes usando o Miniconda.
 
