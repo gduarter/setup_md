@@ -170,3 +170,4 @@ e outras grandezas físicas podem ser retiradas de arquivos `.edr`.
 
 ### Troubleshooting
 Caso alguma etapa tenha falhado, devemos conferir o arquivo `.log` produzido.
+Em caso de problemas, mande um email para `docgduarte@gmail.com`
