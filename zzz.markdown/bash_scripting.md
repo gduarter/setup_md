@@ -68,7 +68,7 @@ Um tutorial completo de comandos no Unix pode ser encontrado [neste link](http:/
 
 ### Tarefa 1
 Faça os tutoriais 1, 2, 3 e 4 [deste link](http://www.ee.surrey.ac.uk/Teaching/Unix/unix1.html)
-e responda as perguntas. Escreve suas respostas no seu caderno de laboratório no
+e responda as perguntas. Escreva suas respostas no seu caderno de laboratório no
 [Notion](https://www.notion.so), uma ferramenta gratuita bastante útil para organizar dados e
 fazer anotações.
 
