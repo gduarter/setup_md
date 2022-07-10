@@ -1,5 +1,7 @@
 #Bash Scripting
+
 ##Bourne-Again Shell (Bash)
+
 Bash é um acrônimo para “Bourne-Again Shell”, o nome de um interpretador de
 código e uma linguagem de programação bastante usada em Química Computacional.
 Você pode usar o Bash em computadores com sistemas operacionais baseados em
