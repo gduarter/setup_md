@@ -30,13 +30,10 @@ fi
 # define paths
 root=$(pwd)
 scriptdir=${root}/zzz.scripts
-pdbdir=${root}/001.single_mol_files
-packdir=${root}/004.packmol_files
-amberdir=${root}/005.amber_files
 
 # Define relevant numbers for packmol
 NSOLU=1
-NSOLV=150
+NSOLV=1000
 
 # Define relevant numbers for gromacs
 temperature=298.15 #kelvin
@@ -135,7 +132,7 @@ do
         # Prep packmol files
         echo "Prep packmol input files"
         cat <<EOF > input.inp
-tolerance 1.5 # tolerance distance
+tolerance 2.0 # tolerance distance
 output ${name1}_in_${name2}.pdb # output file name
 filetype pdb # output file type
 #
@@ -144,14 +141,16 @@ filetype pdb # output file type
 structure ${name1}.pdb
 number ${NSOLU} # Number of molecules
 resnumbers 3 # Sequential numbering
-inside cube 0. 0. 0. 30. # x, y, z coordinates of box, and length of box in Angstroms
+center
+fixed 30. 30. 30. 0. 0. 0.
+#inside cube 0. 0. 0. 30. # x, y, z coordinates of box, and length of box in Angstroms
 add_amber_ter
 end structure
 #
 structure ${name2}.pdb
 number ${NSOLV} # Number of molecules
 resnumbers 3 # Sequential numbering
-inside cube 0. 0. 0. 30.
+inside cube 0. 0. 0. 60.
 add_amber_ter
 end structure
 EOF
