@@ -22,7 +22,7 @@ for line in lines:
         newlines.append(newline)
     elif "Br" in line:
         newline = line.replace("Br", "BR")
-        newlines.appen(newline)
+        newlines.append(newline)
     else:
         newlines.append(line)
 
