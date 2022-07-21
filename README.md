@@ -15,12 +15,12 @@ O procedimento para gerar os arquivos é simples. Basta digitar no terminal o
 seguinte comando:
 
 ```
-bash organize.sh -u solutes.csv -s solvents.csv
+bash organize.sh -u solutes.csv -s solvents.csv -u -t temperature -p pressure -j number_of_solute_mols -k number_of_solvent_mols
 ```
 
 Cada um dos arquivos `CSV` (_comma separated values_) contém uma tabela em que
 cada molécula é identificada pela sua representação unidimensional (`SMILES`) e
-pelo seu nome. Os scripts ignoram linhas começadas com o caractere `#`.
+pelo seu nome. Os scripts ignoram linhas começadas com o caractere `;`.
 
 Exemplo de arquivo `CSV`:
 ```
@@ -30,7 +30,7 @@ O=C(C(C)NC(C)(C)C)c1cccc(Cl)c1,bupropion
 NCCc1cc(O)c(O)cc1,dopamine
 C[C@@](O)(CCO)CC(=O)O,mevalonicacid
 O=C(O)[C@@H](N)Cc2c1cc(O)ccc1[nH]c2,hydroxytryptophan
-#CC(=CCC/C(=C/CC/C(=C/CC/C=C(/CC/C=C(/CCC=C(C)C)\C)\C)/C)/C)C,squalene
+;CC(=CCC/C(=C/CC/C(=C/CC/C=C(/CC/C=C(/CCC=C(C)C)\C)\C)/C)/C)C,squalene
 ```
 
 Por razões didáticas, solventes e solutos estão separados em arquivos distintos.
@@ -170,4 +170,3 @@ e outras grandezas físicas podem ser retiradas de arquivos `.edr`.
 
 ### Troubleshooting
 Caso alguma etapa tenha falhado, devemos conferir o arquivo `.log` produzido.
-Em caso de problemas, mande um email para `docgduarte@gmail.com`

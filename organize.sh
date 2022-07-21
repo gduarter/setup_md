@@ -5,23 +5,27 @@
 
 ###### Help Function ########
 helpFunction(){
-    echo -e "\tUsage: $0 -u solutes_csv -s solvent_csv"
+    echo -e "\tUsage: $0 -u solutes_csv -s solvent_csv -t temperature -p pressure -j number_of_solute_mols -k number_of_solvent_mols"
     exit 1
 }
 
 # Assign typed arguments to variables
-while getopts "u:s:" opt
+while getopts "u:s:t:p:j:k:" opt
 do
     case $opt in
         u ) SOLUTE="$OPTARG";;
         s ) SOLVENT="$OPTARG";;
+        t ) temperature="$OPTARG";;
+        p ) pressure="$OPTARG";;
+        j ) NSOLU="$OPTARG";;
+        k ) NSOLV="$OPTARG";;
         ? ) helpFunction ;;
     esac
 done
 
 # Prints helpFuntion in case the number of parameters do not match what
 # the script requires
-if [ -z "${SOLUTE}" ] || [ -z "${SOLVENT}" ]
+if [ -z "${SOLUTE}" ] || [ -z "${SOLVENT}" ] || [ -z "${temperature}" ] || [ -z "${pressure}" ] || [ -z "${NSOLU}" ] || [ -z "${NSOLV}" ]
 then
     echo "You are misusing this script"
     helpFunction
@@ -30,17 +34,14 @@ fi
 # define paths
 root=$(pwd)
 scriptdir=${root}/zzz.scripts
-pdbdir=${root}/001.single_mol_files
-packdir=${root}/004.packmol_files
-amberdir=${root}/005.amber_files
 
-# Define relevant numbers for packmol
-NSOLU=1
-NSOLV=150
+## Define relevant numbers for packmol
+#NSOLU=1
+#NSOLV=500
 
-# Define relevant numbers for gromacs
-temperature=298.15 #kelvin
-pressure=1.01325 #bar
+## Define relevant numbers for gromacs
+#temperature=298.15 #kelvin
+#pressure=1.01325 #bar
 
 
 array=(${SOLUTE} ${SOLVENT})
@@ -91,7 +92,7 @@ do
         rm sqm.*
 
         # Transform Cl and Br in mol2 files in CL and BR.
-        # tleap will fail if don't do it
+        # tleap will fail if you don't do it
         echo "Checking if there are halogens with inappropriate names"
         python3 ${scriptdir}/fixChlorineBromine.py -f ${molname}.mol2
         if [ -f "${molname}_fixed.mol2" ]
@@ -135,7 +136,7 @@ do
         # Prep packmol files
         echo "Prep packmol input files"
         cat <<EOF > input.inp
-tolerance 1.5 # tolerance distance
+tolerance 1.0 # tolerance distance
 output ${name1}_in_${name2}.pdb # output file name
 filetype pdb # output file type
 #
@@ -144,14 +145,16 @@ filetype pdb # output file type
 structure ${name1}.pdb
 number ${NSOLU} # Number of molecules
 resnumbers 3 # Sequential numbering
-inside cube 0. 0. 0. 30. # x, y, z coordinates of box, and length of box in Angstroms
+center
+fixed 30. 30. 30. 0. 0. 0.
+#inside cube 0. 0. 0. 30. # x, y, z coordinates of box, and length of box in Angstroms
 add_amber_ter
 end structure
 #
 structure ${name2}.pdb
 number ${NSOLV} # Number of molecules
 resnumbers 3 # Sequential numbering
-inside cube 0. 0. 0. 30.
+inside cube 0. 0. 0. 60.
 add_amber_ter
 end structure
 EOF
@@ -197,7 +200,7 @@ nsteps                   = 2500
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
-nstcomm                  = 1
+nstcomm                  = 100
 
 ; ENERGY MINIMIZATION OPTIONS
 ; Force tolerance and initial step-size
@@ -226,6 +229,7 @@ nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
+cutoff-scheme            = Verlet
 ; nblist update frequency
 nstlist                  = 10
 ; ns algorithm (simple or grid)
@@ -263,7 +267,7 @@ epsilon_surface          = 0
 optimize_fft             = yes
 
 ; OPTIONS FOR BONDS
-constraints              = hbonds
+constraints              = hbonds ;all-bonds ; to constrain all bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
@@ -295,7 +299,7 @@ nsteps                   = 25000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
-nstcomm                  = 10
+nstcomm                  = 100
 
 ; OUTPUT CONTROL OPTIONS
 ; Output frequency for coords (x), velocities (v) and forces (f)
@@ -312,6 +316,7 @@ nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
+cutoff-scheme            = Verlet
 ; nblist update frequency
 nstlist                  = 10
 ; ns algorithm (simple or grid)
@@ -367,7 +372,7 @@ gen_seed                 = 2022
 ld_seed                  = -1
 
 ; OPTIONS FOR BONDS
-constraints              = hbonds
+constraints              = hbonds ;all-bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
@@ -395,11 +400,11 @@ integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 25000
+nsteps                   = 100000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
-nstcomm                  = 1
+nstcomm                  = 100
 
 ; OUTPUT CONTROL OPTIONS
 ; Output frequency for coords (x), velocities (v) and forces (f)
@@ -416,6 +421,7 @@ nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
+cutoff-scheme            = Verlet
 ; nblist update frequency
 nstlist                  = 10
 ; ns algorithm (simple or grid)
@@ -468,7 +474,7 @@ compressibility          = 4.5e-5
 ref_p                    = ${pressure}
 
 ; OPTIONS FOR BONDS
-constraints              = hbonds
+constraints              = hbonds ;all-bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
@@ -500,11 +506,11 @@ integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 25000
+nsteps                   = 50000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
-nstcomm                  = 1
+nstcomm                  = 100
 
 ; OUTPUT CONTROL OPTIONS
 ; Output frequency for coords (x), velocities (v) and forces (f)
@@ -521,6 +527,7 @@ nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
+cutoff-scheme            = Verlet
 ; nblist update frequency
 nstlist                  = 10
 ; ns algorithm (simple or grid)
@@ -573,7 +580,7 @@ compressibility          = 4.5e-5
 ref_p                    = ${pressure}
 
 ; OPTIONS FOR BONDS
-constraints              = hbonds
+constraints              = hbonds ;all-bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
@@ -606,11 +613,11 @@ integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 2500000
+nsteps                   = 5000000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
-nstcomm                  = 1
+nstcomm                  = 100
 
 ; OUTPUT CONTROL OPTIONS
 ; Output frequency for coords (x), velocities (v) and forces (f)
@@ -627,6 +634,7 @@ nstxout-compressed       = 1000
 compressed-x-precision   = 1000
 
 ; NEIGHBORSEARCHING PARAMETERS
+cutoff-scheme            = Verlet
 ; nblist update frequency
 nstlist                  = 10
 ; ns algorithm (simple or grid)
@@ -679,7 +687,7 @@ compressibility          = 4.5e-5
 ref_p                    = ${pressure}
 
 ; OPTIONS FOR BONDS
-constraints              = hbonds
+constraints              = hbonds ;all-bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
