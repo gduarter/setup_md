@@ -19,7 +19,7 @@ if len(args.csvfile) != 1:
 filename = args.csvfile[0]
 
 # Open CSV
-df = pd.read_csv(filename, comment="#")
+df = pd.read_csv(filename, comment=";")
 # Create mol objects
 df["RDMol"] = df["SMILES"].apply(lambda smi: Chem.MolFromSmiles(smi))
 df["RDMol_H"] = df["RDMol"].apply(lambda mol: Chem.AddHs(mol))
