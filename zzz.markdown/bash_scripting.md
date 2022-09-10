@@ -5,7 +5,8 @@
 Bash é um acrônimo para “Bourne-Again Shell”, o nome de um interpretador de
 código e uma linguagem de programação bastante usada em Química Computacional.
 Você pode usar o Bash em computadores com sistemas operacionais baseados em
-Linux/Unix ou até mesmo em computadores com [Windows 10](https://apps.microsoft.com/store/detail/ubuntu-on-windows/9NBLGGH4MSV6?hl=pt-br&gl=BR).
+Linux/Unix ou até mesmo em computadores com [Windows 10](https://apps.microsoft.com/store/detail/ubuntu-on-windows/9NBLGGH4MSV6?hl=pt-br&gl=BR). 
+Caso seja um usuário de Windows, [siga as instruções deste link](https://allthings.how/how-to-use-linux-terminal-in-windows-10/).
 Em um sistema operacional Linux, como o Ubuntu usado no LMSC, você deve procurar
 o aplicativo do terminal ou pressionar o atalho `Control+Alt+T`. Caso tenha o
 terminal do Ubuntu instalado em seu computador com Windows, pode acessá-lo da
@@ -91,8 +92,10 @@ comando no terminal:
 touch meu_primeiro_script.sh
 ```
 Para abrir o arquivo recém criado, você pode usar o editor de texto que quiser.
-Eu gosto de usar o `Vim`, mas você pode usar o [`Atom`](https://atom.io), `Nano`, `EMACS`. Para
+Eu gosto de usar o `Vim`, mas você pode usar o `Nano`, o `EMACS` ou o `Notepad++`. Para
 conhecer mais comandos do `Vim`, acesse [este link](http://ringo.ams.stonybrook.edu/index.php/Vi).
+Até mesmo o bloco de notas tradicional (`Notepad`) é bom o suficiente, mas recomenda-se que
+o aluno se familiarize com ferramentas acessíveis pelo terminal.
 Usando o seu editor de texto favorito, você deve adicionar a seguinte linha ao
 topo do arquivo:
 ```
