@@ -60,7 +60,7 @@ instalar os pacotes principais faça, na seguinte ordem:
 conda install numpy
 conda install scipy
 conda install matplotlib
-conda install rdkit
+conda install -c rdkit rdkit
 conda install -c conda-forge ambertools
 conda install -c omnia openmm
 ```
