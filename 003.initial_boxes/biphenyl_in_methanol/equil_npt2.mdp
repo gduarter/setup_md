@@ -1,0 +1,102 @@
+; RUN CONTROL PARAMETERS
+integrator               = sd
+; Start time and timestep in ps
+tinit                    = 0
+dt                       = 0.002
+nsteps                   = 50000
+; mode for center of mass motion removal
+comm-mode                = Linear
+; number of steps for center of mass motion removal
+nstcomm                  = 100
+
+; OUTPUT CONTROL OPTIONS
+; Output frequency for coords (x), velocities (v) and forces (f)
+nstxout                  = 0
+nstvout                  = 0
+nstfout                  = 0
+; Checkpointing helps you continue after crashes
+nstcheckpoint            = 1000
+; Output frequency for energies to log file and energy file
+nstlog                   = 100
+nstenergy                = 100
+; Output frequency and precision for xtc file
+nstxout-compressed       = 0
+compressed-x-precision   = 1000
+
+; NEIGHBORSEARCHING PARAMETERS
+cutoff-scheme            = Verlet
+; nblist update frequency
+nstlist                  = 10
+; ns algorithm (simple or grid)
+ns_type                  = grid
+; Periodic boundary conditions: xyz (default), no (vacuum)
+; or full (infinite systems only)
+pbc                      = xyz
+; nblist cut-off
+rlist                    = 1.2
+
+; OPTIONS FOR ELECTROSTATICS AND VDW
+; Method for doing electrostatics
+coulombtype              = pme
+rcoulomb-switch          = 0
+rcoulomb                 = 1.2
+; Dielectric constant (DC) for cut-off or DC of reaction field
+; Method for doing Van der Waals
+vdw-type                 = Cut-off
+; cut-off lengths
+rvdw                     = 1.0
+; Apply long range dispersion corrections for Energy and Pressure
+DispCorr                 = AllEnerPres
+; Extension of the potential lookup tables beyond the cut-off
+; Spacing for the PME/PPPM FFT grid
+fourierspacing           = 0.10
+; FFT grid size, when a value is 0 fourierspacing will be used
+fourier_nx               = 0
+fourier_ny               = 0
+fourier_nz               = 0
+; EWALD/PME/PPPM parameters
+pme_order                = 6
+ewald_rtol               = 1e-06
+ewald_geometry           = 3d
+epsilon_surface          = 0
+optimize_fft             = yes
+
+; OPTIONS FOR WEAK COUPLING ALGORITHMS
+; Temperature coupling
+Tcoupl                   = no
+tc-grps                  = System
+; Time constant (ps) and reference temperature (K)
+tau_t                    = 0.1
+ref_t                    = 298
+; Pressure coupling
+Pcoupl                   = Parrinello-Rahman
+Pcoupltype               = isotropic
+; Time constant (ps), compressibility (1/bar) and reference P (bar)
+tau_p                    = 5
+compressibility          = 4.5e-5
+ref_p                    = 1
+
+; OPTIONS FOR BONDS
+constraints              = hbonds ;all-bonds
+; Type of constraint algorithm
+constraint-algorithm     = Lincs
+; Do not constrain the start configuration
+continuation             = yes
+; Use successive overrelaxation to reduce the number of shake iterations
+Shake-SOR                = no
+; Relative tolerance of shake
+shake-tol                = 1e-04
+; Highest order in the expansion of the constraint coupling matrix
+lincs-order              = 12
+; Number of iterations in the final step of LINCS. 1 is fine for
+; normal simulations, but use 2 to conserve energy in NVE runs.
+; For energy minimization with constraints it should be 4 to 8.
+; Lincs will write a warning to the stderr if in one step a bond
+; rotates over more degrees than
+lincs-warnangle          = 30
+; Convert harmonic bonds to morse potentials
+morse                    = no
+
+; GENERATE VELOCITIES FOR STARTUP RUN
+gen_vel                  = no
+ld_seed                  = -1
