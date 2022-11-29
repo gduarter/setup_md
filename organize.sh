@@ -196,7 +196,7 @@ EOF
 ; RUN CONTROL PARAMETERS
 integrator               = steep
 ; Start time and timestep in ps
-nsteps                   = 2500
+nsteps                   = 10000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
@@ -220,10 +220,10 @@ nstxout                  = 0
 nstvout                  = 0
 nstfout                  = 0
 ; Checkpointing helps you continue after crashes
-nstcheckpoint            = 1000
+nstcheckpoint            = 0
 ; Output frequency for energies to log file and energy file
-nstlog                   = 100
-nstenergy                = 100
+nstlog                   = 0
+nstenergy                = 0
 ; Output frequency and precision for xtc file
 nstxout-compressed       = 0
 compressed-x-precision   = 1000
@@ -295,7 +295,7 @@ integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 25000
+nsteps                   = 1000000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
@@ -307,51 +307,35 @@ nstxout                  = 0
 nstvout                  = 0
 nstfout                  = 0
 ; Checkpointing helps you continue after crashes
-nstcheckpoint            = 1000
+nstcheckpoint            = 0
 ; Output frequency for energies to log file and energy file
-nstlog                   = 100
-nstenergy                = 100
+nstlog                   = 0
+nstenergy                = 0
 ; Output frequency and precision for xtc file
 nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
-; NEIGHBORSEARCHING PARAMETERS
-cutoff-scheme            = Verlet
-; nblist update frequency
-nstlist                  = 10
-; ns algorithm (simple or grid)
-ns_type                  = grid
 ; Periodic boundary conditions: xyz (default), no (vacuum)
 ; or full (infinite systems only)
 pbc                      = xyz
-; nblist cut-off
-rlist                    = 1.2
 
-; OPTIONS FOR ELECTROSTATICS AND VDW
-; Method for doing electrostatics
-coulombtype              = pme
-rcoulomb-switch          = 0
-rcoulomb                 = 1.2
-; Dielectric constant (DC) for cut-off or DC of reaction field
-; Method for doing Van der Waals
-vdw-type                 = Cut-off
-; cut-off lengths
-rvdw                     = 1.0
+; Neighbor searching and vdW
+cutoff-scheme           = Verlet
+ns_type                 = grid
+nstlist                 = 20
+rlist                   = 1.2
+vdwtype                 = cutoff
+vdw-modifier            = force-switch
+rvdw-switch             = 1.0
+rvdw                    = 1.2
+; Electrostatics
+coulombtype             = PME
+rcoulomb                = 1.2
+pme_order               = 4
+fourierspacing          = 0.16
+
 ; Apply long range dispersion corrections for Energy and Pressure
 DispCorr                 = AllEnerPres
-; Extension of the potential lookup tables beyond the cut-off
-; Spacing for the PME/PPPM FFT grid
-fourierspacing           = 0.10
-; FFT grid size, when a value is 0 fourierspacing will be used
-fourier_nx               = 0
-fourier_ny               = 0
-fourier_nz               = 0
-; EWALD/PME/PPPM parameters
-pme_order                = 6
-ewald_rtol               = 1e-06
-ewald_geometry           = 3d
-epsilon_surface          = 0
-optimize_fft             = yes
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling
@@ -400,7 +384,7 @@ integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 100000
+nsteps                   = 1000000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
@@ -412,58 +396,42 @@ nstxout                  = 0
 nstvout                  = 0
 nstfout                  = 0
 ; Checkpointing helps you continue after crashes
-nstcheckpoint            = 1000
+nstcheckpoint            = 0
 ; Output frequency for energies to log file and energy file
-nstlog                   = 100
-nstenergy                = 100
+nstlog                   = 0
+nstenergy                = 0
 ; Output frequency and precision for xtc file
 nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
-; NEIGHBORSEARCHING PARAMETERS
-cutoff-scheme            = Verlet
-; nblist update frequency
-nstlist                  = 10
-; ns algorithm (simple or grid)
-ns_type                  = grid
 ; Periodic boundary conditions: xyz (default), no (vacuum)
 ; or full (infinite systems only)
 pbc                      = xyz
-; nblist cut-off
-rlist                    = 1.2
 
-; OPTIONS FOR ELECTROSTATICS AND VDW
-; Method for doing electrostatics
-coulombtype              = pme
-rcoulomb-switch          = 0
-rcoulomb                 = 1.2
-; Dielectric constant (DC) for cut-off or DC of reaction field
-; Method for doing Van der Waals
-vdw-type                 = Cut-off
-; cut-off lengths
-rvdw                     = 1.0
+; Neighbor searching and vdW
+cutoff-scheme           = Verlet
+ns_type                 = grid
+nstlist                 = 20
+rlist                   = 1.2
+vdwtype                 = cutoff
+vdw-modifier            = force-switch
+rvdw-switch             = 1.0
+rvdw                    = 1.2
+; Electrostatics
+coulombtype             = PME
+rcoulomb                = 1.2
+pme_order               = 4
+fourierspacing          = 0.16
+
 ; Apply long range dispersion corrections for Energy and Pressure
 DispCorr                 = AllEnerPres
-; Extension of the potential lookup tables beyond the cut-off
-; Spacing for the PME/PPPM FFT grid
-fourierspacing           = 0.10
-; FFT grid size, when a value is 0 fourierspacing will be used
-fourier_nx               = 0
-fourier_ny               = 0
-fourier_nz               = 0
-; EWALD/PME/PPPM parameters
-pme_order                = 6
-ewald_rtol               = 1e-06
-ewald_geometry           = 3d
-epsilon_surface          = 0
-optimize_fft             = yes
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling
 Tcoupl                   = no
 tc-grps                  = System
 ; Time constant (ps) and reference temperature (K)
-tau_t                    = 0.1
+tau_t                    = 2.0
 ref_t                    = ${temperature}
 ; Pressure coupling
 Pcoupl                   = berendsen
@@ -506,7 +474,7 @@ integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 50000
+nsteps                   = 1000000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
@@ -518,58 +486,42 @@ nstxout                  = 0
 nstvout                  = 0
 nstfout                  = 0
 ; Checkpointing helps you continue after crashes
-nstcheckpoint            = 1000
+nstcheckpoint            = 0
 ; Output frequency for energies to log file and energy file
-nstlog                   = 100
-nstenergy                = 100
+nstlog                   = 0
+nstenergy                = 0
 ; Output frequency and precision for xtc file
 nstxout-compressed       = 0
 compressed-x-precision   = 1000
 
-; NEIGHBORSEARCHING PARAMETERS
-cutoff-scheme            = Verlet
-; nblist update frequency
-nstlist                  = 10
-; ns algorithm (simple or grid)
-ns_type                  = grid
 ; Periodic boundary conditions: xyz (default), no (vacuum)
 ; or full (infinite systems only)
 pbc                      = xyz
-; nblist cut-off
-rlist                    = 1.2
 
-; OPTIONS FOR ELECTROSTATICS AND VDW
-; Method for doing electrostatics
-coulombtype              = pme
-rcoulomb-switch          = 0
-rcoulomb                 = 1.2
-; Dielectric constant (DC) for cut-off or DC of reaction field
-; Method for doing Van der Waals
-vdw-type                 = Cut-off
-; cut-off lengths
-rvdw                     = 1.0
+; Neighbor searching and vdW
+cutoff-scheme           = Verlet
+ns_type                 = grid
+nstlist                 = 20
+rlist                   = 1.2
+vdwtype                 = cutoff
+vdw-modifier            = force-switch
+rvdw-switch             = 1.0
+rvdw                    = 1.2
+; Electrostatics
+coulombtype             = PME
+rcoulomb                = 1.2
+pme_order               = 4
+fourierspacing          = 0.16
+
 ; Apply long range dispersion corrections for Energy and Pressure
 DispCorr                 = AllEnerPres
-; Extension of the potential lookup tables beyond the cut-off
-; Spacing for the PME/PPPM FFT grid
-fourierspacing           = 0.10
-; FFT grid size, when a value is 0 fourierspacing will be used
-fourier_nx               = 0
-fourier_ny               = 0
-fourier_nz               = 0
-; EWALD/PME/PPPM parameters
-pme_order                = 6
-ewald_rtol               = 1e-06
-ewald_geometry           = 3d
-epsilon_surface          = 0
-optimize_fft             = yes
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling
 Tcoupl                   = no
 tc-grps                  = System
 ; Time constant (ps) and reference temperature (K)
-tau_t                    = 0.1
+tau_t                    = 2.0
 ref_t                    = ${temperature}
 ; Pressure coupling
 Pcoupl                   = Parrinello-Rahman
@@ -613,7 +565,7 @@ integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 5000000
+nsteps                   = 15000000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
@@ -633,50 +585,34 @@ nstenergy                = 100
 nstxout-compressed       = 1000
 compressed-x-precision   = 1000
 
-; NEIGHBORSEARCHING PARAMETERS
-cutoff-scheme            = Verlet
-; nblist update frequency
-nstlist                  = 10
-; ns algorithm (simple or grid)
-ns_type                  = grid
 ; Periodic boundary conditions: xyz (default), no (vacuum)
 ; or full (infinite systems only)
 pbc                      = xyz
-; nblist cut-off
-rlist                    = 1.2
 
-; OPTIONS FOR ELECTROSTATICS AND VDW
-; Method for doing electrostatics
-coulombtype              = pme
-rcoulomb-switch          = 0
-rcoulomb                 = 1.2
-; Dielectric constant (DC) for cut-off or DC of reaction field
-; Method for doing Van der Waals
-vdw-type                 = Cut-off
-; cut-off lengths
-rvdw                     = 1.0
+; Neighbor searching and vdW
+cutoff-scheme           = Verlet
+ns_type                 = grid
+nstlist                 = 20
+rlist                   = 1.2
+vdwtype                 = cutoff
+vdw-modifier            = force-switch
+rvdw-switch             = 1.0
+rvdw                    = 1.2
+; Electrostatics
+coulombtype             = PME
+rcoulomb                = 1.2
+pme_order               = 4
+fourierspacing          = 0.16
+
 ; Apply long range dispersion corrections for Energy and Pressure
 DispCorr                 = AllEnerPres
-; Extension of the potential lookup tables beyond the cut-off
-; Spacing for the PME/PPPM FFT grid
-fourierspacing           = 0.10
-; FFT grid size, when a value is 0 fourierspacing will be used
-fourier_nx               = 0
-fourier_ny               = 0
-fourier_nz               = 0
-; EWALD/PME/PPPM parameters
-pme_order                = 6
-ewald_rtol               = 1e-06
-ewald_geometry           = 3d
-epsilon_surface          = 0
-optimize_fft             = yes
 
 ; OPTIONS FOR WEAK COUPLING ALGORITHMS
 ; Temperature coupling
 Tcoupl                   = no
 tc-grps                  = System
 ; Time constant (ps) and reference temperature (K)
-tau_t                    = 0.1
+tau_t                    = 2.0
 ref_t                    = ${temperature}
 ; Pressure coupling
 Pcoupl                   = Parrinello-Rahman
