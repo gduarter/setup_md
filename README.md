@@ -15,7 +15,7 @@ O procedimento para gerar os arquivos é simples. Basta digitar no terminal o
 seguinte comando:
 
 ```
-bash organize.sh -u solutes.csv -s solvents.csv -t temperature -p pressure -j number_of_solute_mols -k number_of_solvent_mols
+bash organize_solution.sh -u solutes.csv -s solvents.csv -t temperature -p pressure -j number_of_solute_mols -k number_of_solvent_mols
 ```
 
 Cada um dos arquivos `CSV` (_comma separated values_) contém uma tabela em que
