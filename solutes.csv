@@ -1,8 +1,8 @@
 SMILES,Name
 c1ccccc1-c2ccccc2,biphenyl
-O=C(C(C)NC(C)(C)C)c1cccc(Cl)c1,bupropion
-NCCc1cc(O)c(O)cc1,dopamine
-C[C@@](O)(CCO)CC(=O)O,mevalonicacid
-O=C(O)[C@@H](N)Cc2c1cc(O)ccc1[nH]c2,hydroxytryptophan
+;O=C(C(C)NC(C)(C)C)c1cccc(Cl)c1,bupropion
+;NCCc1cc(O)c(O)cc1,dopamine
+;C[C@@](O)(CCO)CC(=O)O,mevalonicacid
+;O=C(O)[C@@H](N)Cc2c1cc(O)ccc1[nH]c2,hydroxytryptophan
 ;CC(=CCC/C(=C/CC/C(=C/CC/C=C(/CC/C=C(/CCC=C(C)C)\C)\C)/C)/C)C,squalene
 

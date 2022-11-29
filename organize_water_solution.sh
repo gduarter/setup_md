@@ -5,7 +5,7 @@
 
 ###### Help Function ########
 helpFunction(){
-    echo -e "\tUsage: $0 -u solutes_csv -s solvent_csv -t temperature -p pressure -j number_of_solute_mols -k number_of_solvent_mols"
+    echo -e "\tUsage: $0 -u solutes_csv -t temperature -p pressure"
     exit 1
 }
 
@@ -14,18 +14,16 @@ while getopts "u:s:t:p:j:k:" opt
 do
     case $opt in
         u ) SOLUTE="$OPTARG";;
-        s ) SOLVENT="$OPTARG";;
         t ) temperature="$OPTARG";;
         p ) pressure="$OPTARG";;
         j ) NSOLU="$OPTARG";;
-        k ) NSOLV="$OPTARG";;
         ? ) helpFunction ;;
     esac
 done
 
 # Prints helpFuntion in case the number of parameters do not match what
 # the script requires
-if [ -z "${SOLUTE}" ] || [ -z "${SOLVENT}" ] || [ -z "${temperature}" ] || [ -z "${pressure}" ] || [ -z "${NSOLU}" ] || [ -z "${NSOLV}" ]
+if [ -z "${SOLUTE}" ] || [ -z "${temperature}" ] || [ -z "${pressure}" ]
 then
     echo "You are misusing this script"
     helpFunction
@@ -35,27 +33,13 @@ fi
 root=$(pwd)
 scriptdir=${root}/zzz.scripts
 
-## Define relevant numbers for packmol
-#NSOLU=1
-#NSOLV=500
-
-## Define relevant numbers for gromacs
-#temperature=298.15 #kelvin
-#pressure=1.01325 #bar
-
-
-array=(${SOLUTE} ${SOLVENT})
+array=(${SOLUTE})
 for val in "${array[@]}"
 do
 
     # Create PDB files for each molecule
     echo "Creating PDB files from SMILES"
-    if [ $val == $SOLUTE ]
-        then
-        pdbdir=${root}/001.solutes
-    else
-        pdbdir=${root}/002.solvents
-    fi
+    pdbdir=${root}/005.to_hydrate
 
     mkdir -p ${pdbdir}
     cd ${pdbdir}
@@ -114,82 +98,39 @@ cd ${boxes}
 
 # For each template, generate solvated files with monomers
 echo "Generate solvated boxes"
-for mol1 in ${root}/001.solutes/*.pdb
+for mol1 in ${root}/005.to_hydrate/*.pdb
 do
-    for mol2 in ${root}/002.solvents/*.pdb
-    do
         # Create name of molecule 1
         tmp_mol1=${mol1%.pdb}
         name1=${tmp_mol1##*/}
-        # Create name of molecule 2
-        tmp_mol2=${mol2%.pdb}
-        name2=${tmp_mol2##*/}
 
         # Create directory and copy files
-        mkdir -p ${boxes}/${name1}_in_${name2}
-        cd ${boxes}/${name1}_in_${name2}
+        mkdir -p ${boxes}/${name1}_in_water
+        cd ${boxes}/${name1}_in_water
         echo ${mol1}
-        echo ${mol2}
-        cp ${mol1%.*}.* ${boxes}/${name1}_in_${name2}
-        cp ${mol2%.*}.* ${boxes}/${name1}_in_${name2}
-
-        # Prep packmol files
-        echo "Prep packmol input files"
-        cat <<EOF > input.inp
-tolerance 1.0 # tolerance distance
-output ${name1}_in_${name2}.pdb # output file name
-filetype pdb # output file type
-#
-# Create a box of ${name1} in ${name2} molecules
-#
-structure ${name1}.pdb
-number ${NSOLU} # Number of molecules
-resnumbers 3 # Sequential numbering
-center
-fixed 30. 30. 30. 0. 0. 0.
-#inside cube 0. 0. 0. 30. # x, y, z coordinates of box, and length of box in Angstroms
-add_amber_ter
-end structure
-#
-structure ${name2}.pdb
-number ${NSOLV} # Number of molecules
-resnumbers 3 # Sequential numbering
-inside cube 0. 0. 0. 60.
-add_amber_ter
-end structure
-EOF
-        # Run packmol
-        echo "Run packmol for ${name1}_in_${name2}"
-        packmol < input.inp
+        cp ${mol1%.*}.* ${boxes}/${name1}_in_water
 
         #Define 3-letter code for each molecule
         tmp_code1=${name1::3}
         code1=$(echo $tmp_code1 | tr '[:lower:]' '[:upper:]')
-        tmp_code2=${name2::3}
-        code2=$(echo $tmp_code2 | tr '[:lower:]' '[:upper:]')
 
         # Create tleap input
         echo "Create tleap input"
         cat <<EOF > tl.in
 source leaprc.gaff2
-
+source leaprc.water.tip3p
 ${code1} = loadmol2 ${name1}.mol2
 loadamberparams ${name1}.frcmod
-${code2} = loadmol2 ${name2}.mol2
-loadamberparams ${name2}.frcmod
-
-fullbox = loadPdB ${name1}_in_${name2}.pdb
-
-setbox fullbox centers
-
-saveAmberParm fullbox ${name1}_in_${name2}.prmtop ${name1}_in_${name2}.inpcrd
+solvatebox ${code1} TIP3PBOX 12.0
+setbox ${code1} centers 0.0
+saveAmberParm ${code1} ${name1}_in_water.prmtop ${name1}_in_water.inpcrd
 quit
 EOF
         echo "Running tleap"
         tleap -f tl.in
 
         # Create gromacs gro e top files
-        python3 ${scriptdir}/amber_to_gmx.py -p ${name1}_in_${name2}.prmtop -c ${name1}_in_${name2}.inpcrd
+        python3 ${scriptdir}/amber_to_gmx.py -p ${name1}_in_water.prmtop -c ${name1}_in_water.inpcrd
 
         # Create minimization MDP file
         cat<<EOF > minimization.mdp
@@ -267,7 +208,7 @@ epsilon_surface          = 0
 optimize_fft             = yes
 
 ; OPTIONS FOR BONDS
-constraints              = hbonds ;all-bonds ; to constrain all bonds
+constraints              = ;hbonds ;all-bonds ; to constrain all bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
@@ -356,7 +297,7 @@ gen_seed                 = 2022
 ld_seed                  = -1
 
 ; OPTIONS FOR BONDS
-constraints              = hbonds ;all-bonds
+constraints              = all-bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
@@ -442,7 +383,7 @@ compressibility          = 4.5e-5
 ref_p                    = ${pressure}
 
 ; OPTIONS FOR BONDS
-constraints              = hbonds ;all-bonds
+constraints              = all-bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
@@ -532,7 +473,7 @@ compressibility          = 4.5e-5
 ref_p                    = ${pressure}
 
 ; OPTIONS FOR BONDS
-constraints              = hbonds ;all-bonds
+constraints              = all-bonds
 ; Type of constraint algorithm
 constraint-algorithm     = Lincs
 ; Do not constrain the start configuration
@@ -648,7 +589,6 @@ gen_vel                  = no
 ld_seed                  = -1
 EOF
         cd ${boxes}
-    done
 done
 
 cd ${root}
