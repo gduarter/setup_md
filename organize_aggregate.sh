@@ -114,7 +114,7 @@ do
         # Prep packmol files
         echo "Prep packmol input files"
         cat <<EOF > input.inp
-tolerance 1.0 # tolerance distance
+tolerance 3.0 # tolerance distance
 output ${name1}_aggregate.pdb # output file name
 filetype pdb # output file type
 #
