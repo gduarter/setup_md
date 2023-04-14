@@ -5,27 +5,25 @@
 
 ###### Help Function ########
 helpFunction(){
-    echo -e "\tUsage: $0 -u solutes_csv -s solvents_csv -t temperature -p pressure -n number_of_solute_mols"
+    echo -e "\tUsage: $0 -u solutes_csv -t temperature -p pressure -n number_of_solute_mols"
     exit 1
 }
 
 # Assign typed arguments to variables
-while getopts "u:s:t:p:n:m:" opt
+while getopts "u:s:t:p:n:" opt
 do
     case $opt in
         u ) SOLUTE="$OPTARG";;
-        s ) SOLVENT="$OPTARG";;
         t ) temperature="$OPTARG";;
         p ) pressure="$OPTARG";;
         n ) NSOLU="$OPTARG";;
-        m ) NSOLV="$OPTARG";;
         ? ) helpFunction ;;
     esac
 done
 
 # Prints helpFuntion in case the number of parameters do not match what
 # the script requires
-if [ -z "${SOLUTE}" ] || [ -z "${SOLVENT}" ] || [ -z "${temperature}" ] || [ -z "${pressure}" ] || [ -z "${NSOLU}" ] || [ -z "${NSOLV}" ]
+if [ -z "${SOLUTE}" ] || [ -z "${temperature}" ] || [ -z "${pressure}" ] || [ -z "${NSOLU}" ] 
 then
     echo "You are misusing this script"
     helpFunction
@@ -36,30 +34,26 @@ root=$(pwd)
 scriptdir=${root}/zzz.scripts
 
 
-array=(${SOLUTE} ${SOLVENT})
+array=(${SOLUTE})
 for val in "${array[@]}"
 do
 
     # Create PDB files for each molecule
     echo "Creating PDB files from SMILES"
-    if [ $val == $SOLUTE ]
-        then
-        pdbdir=${root}/001.solutes
-    else
-        pdbdir=${root}/002.solvents
-    fi
-
-    #pdbdir=${root}/004.aggregates_nonaqueous_solution
+    pdbdir=${root}/001.molecules
 
     mkdir -p ${pdbdir}
     cd ${pdbdir}
     python3 ${scriptdir}/create_pdbfiles.py -c ${root}/$val
+
+    #exit 0
     # Remove lines containing 'CONECT'
     for elem in *.pdb
     do
         sed '/CONECT/d' $elem > tmp.pdb
         mv tmp.pdb $elem
     done
+    #exit 0
 
     echo "Parameterizing each generated molecule"
     for elem in *.pdb
@@ -75,6 +69,8 @@ do
         echo "Starting Antechamber with ${molname}, code ${code}"
         # Fixing residue names
         antechamber -i ${molname}.pdb -fi pdb -o ${molname}_renamed.pdb -fo pdb -rn ${code}
+
+        #exit 0
         rm ${molname}.pdb
         mv ${molname}_renamed.pdb ${molname}.pdb
         # Creating simulation files
@@ -102,36 +98,29 @@ do
 done
 
 # Create another simulation directory
-boxes=${root}/003.aggregates_nonaqueous_solution
+boxes=${root}/002.aggregates_in_water
 mkdir -p ${boxes}
 cd ${boxes}
 
 # For each template, generate solvated files with monomers
 echo "Generate solvated boxes"
-for mol1 in ${root}/001.solutes/*.pdb
+for mol1 in ${root}/001.molecules/*.pdb
 do
-    for mol2 in ${root}/002.solvents/*.pdb
-    do
         # Create name of molecule 1
         tmp_mol1=${mol1%.pdb}
         name1=${tmp_mol1##*/}
-        # Create name of molecule 2
-        tmp_mol2=${mol2%.pdb}
-        name2=${tmp_mol2##*/}
 
         # Create directory and copy files
-        mkdir -p ${boxes}/${name1}_aggregate_in_${name2}
-        cd ${boxes}/${name1}_aggregate_in_${name2}
+        mkdir -p ${boxes}/${name1}_in_water
+        cd ${boxes}/${name1}_in_water
         echo ${mol1}
-        echo ${mol2}
-        cp ${mol1%.*}.* ${boxes}/${name1}_aggregate_in_${name2}
-        cp ${mol2%.*}.* ${boxes}/${name1}_aggregate_in_${name2}
+        cp ${mol1%.*}.* ${boxes}/${name1}_in_water
 
         # Prep packmol files
         echo "Prep packmol input files"
         cat <<EOF > input.inp
 tolerance 3.0 # tolerance distance
-output ${name1}_aggregate_in_${name2}.pdb # output file name
+output ${name1}_no_water.pdb # output file name
 filetype pdb # output file type
 #
 # Create a box of ${name1} molecules
@@ -144,54 +133,41 @@ inside cube 0. 0. 0. 40. # x, y, z coordinates of box, and length of box in Angs
 add_amber_ter
 end structure
 #
-structure ${name2}.pdb
-number ${NSOLV}
-resnumbers 3
-outside cube 0. 0. 0. 40.
-inside cube 0. 0. 0. 70.
-add_amber_ter
-end structure
-#
 EOF
         # Run packmol
-        echo "Run packmol for ${name1}_aggregate_in_${name2}"
+        echo "Run packmol for ${name1}"
         packmol < input.inp
 
         #Define 3-letter code for each molecule
         tmp_code1=${name1::3}
         code1=$(echo $tmp_code1 | tr '[:lower:]' '[:upper:]')
-        tmp_code2=${name2::3}
-        code2=$(echo $tmp_code2 | tr '[:lower:]' '[:upper:]')
 
         # Create tleap input
         echo "Create tleap input"
         cat <<EOF > tl.in
 source leaprc.gaff2
-
+source leaprc.water.tip3p
 ${code1} = loadmol2 ${name1}.mol2
-${code2} = loadmol2 ${name2}.mol2
 loadamberparams ${name1}.frcmod
-loadamberparams ${name2}.frcmod
+fullbox = loadPdB ${name1}_no_water.pdb
+solvatebox fullbox TIP3PBOX 20.0
+setbox fullbox centers 0.0
 
-fullbox = loadPdB ${name1}_aggregate_in_${name2}.pdb
-
-setbox fullbox centers
-
-saveAmberParm fullbox ${name1}_aggregate_in_${name2}.prmtop ${name1}_aggregate_in_${name2}.inpcrd
+saveAmberParm fullbox ${name1}_in_water.prmtop ${name1}_in_water.inpcrd
 quit
 EOF
         echo "Running tleap"
         tleap -f tl.in
 
         # Create gromacs gro e top files
-        python3 ${scriptdir}/amber_to_gmx.py -p ${name1}_aggregate_in_${name2}.prmtop -c ${name1}_aggregate_in_${name2}.inpcrd
+        python3 ${scriptdir}/amber_to_gmx.py -p ${name1}_in_water.prmtop -c ${name1}_in_water.inpcrd
 
         # Create minimization MDP file
-        cat<<EOF > minimization.mdp
+        cat<<EOF > 01.minimization.mdp
 ; RUN CONTROL PARAMETERS
 integrator               = steep
 ; Start time and timestep in ps
-nsteps                   = 60000
+nsteps                   = 50000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
@@ -284,13 +260,13 @@ morse                    = no
 EOF
 
         # Create NVT equilibration MDP file
-        cat<<EOF > equil_nvt.mdp
+        cat<<EOF > 02.equil_nvt.mdp
 ; RUN CONTROL PARAMETERS
 integrator               = sd
 ; Start time and timestep in ps
 tinit                    = 0
 dt                       = 0.002
-nsteps                   = 100000
+nsteps                   = 1000000
 ; mode for center of mass motion removal
 comm-mode                = Linear
 ; number of steps for center of mass motion removal
@@ -372,8 +348,7 @@ lincs-warnangle          = 30
 morse                    = no
 EOF
 
-        # Create NPT equilibration MDP file
-        cat<<EOF > equil_npt.mdp
+        cat<<EOF > 03.equil_npt.mdp
 ; RUN CONTROL PARAMETERS
 integrator               = sd
 ; Start time and timestep in ps
@@ -402,7 +377,6 @@ compressed-x-precision   = 1000
 ; Periodic boundary conditions: xyz (default), no (vacuum)
 ; or full (infinite systems only)
 pbc                      = xyz
-
 
 ; Neighbor searching and vdW
 cutoff-scheme           = Verlet
@@ -462,9 +436,7 @@ morse                    = no
 gen_vel                  = no
 ld_seed                  = -1
 EOF
-
-        # Create second NPT equilibration MDP file
-        cat<<EOF > equil_npt2.mdp
+        cat<<EOF > 04.equil_npt2.mdp
 ; RUN CONTROL PARAMETERS
 integrator               = sd
 ; Start time and timestep in ps
@@ -553,8 +525,7 @@ gen_vel                  = no
 ld_seed                  = -1
 EOF
 
-        # Create production stage MDP file
-        cat<<EOF > prod.mdp
+        cat<<EOF > 05.prod.mdp
 ;gromacs stuff
 ; RUN CONTROL PARAMETERS
 integrator               = sd
@@ -584,7 +555,6 @@ compressed-x-precision   = 1000
 ; Periodic boundary conditions: xyz (default), no (vacuum)
 ; or full (infinite systems only)
 pbc                      = xyz
-
 ; Neighbor searching and vdW
 cutoff-scheme           = Verlet
 ns_type                 = grid
@@ -633,7 +603,6 @@ lincs-order              = 12
 ; Number of iterations in the final step of LINCS. 1 is fine for
 ; normal simulations, but use 2 to conserve energy in NVE runs.
 ; For energy minimization with constraints it should be 4 to 8.
-
 ; Lincs will write a warning to the stderr if in one step a bond
 ; rotates over more degrees than
 lincs-warnangle          = 30
@@ -644,8 +613,65 @@ morse                    = no
 gen_vel                  = no
 ld_seed                  = -1
 EOF
-        cd ${boxes}
-    done
+
+        cat<<EOF > gromacs.md.slurm
+#!/bin/bash
+#SBATCH --partition=int_medium
+#SBATCH --time=14-00:00:00
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=16
+#SBATCH --job-name=${name1}
+
+## Prepare o ambiente
+module purge
+module load gnu8/8.3.0
+module add openmpi3/3.1.4
+## GROMACS para ser rodado em CPUs
+module load gromacs-2020.3-gcc-8.3.0-djklvgf
+
+export OMP_NUM_THREADS=\$SLURM_CPUS_PER_TASK
+cd \$SLURM_SUBMIT_DIR
+echo -e "Nome do job:   \$SLURM_JOB_NAME"
+echo -e "Nos alocados:  \$SLURM_JOB_NODELIST"
+
+# Mensagem
+echo "Molecular dynamics simulation to evaluate ligand stability in the binding"
+echo "in the binding site by calculating the RMSD from the production trajectory."
+
+## Execute o programa
+## Minimizacao da energia (optimizacao da geometria)
+echo "Starting minimization"
+gmx grompp -f 01.minimization.mdp -p ${name1}_in_water.top -c ${name1}_in_water.gro -o 01.minimization.tpr
+gmx mdrun -ntomp \${SLURM_CPUS_PER_TASK} -deffnm 01.minimization
+echo "Minimization ended"
+
+## Equilibracao NVT
+echo "Starting NVT equilibration"
+gmx grompp -f 02.equil_nvt.mdp -p ${name1}_in_water.top -c 01.minimization.gro -o 02.equil_nvt.tpr
+gmx mdrun -ntomp \${SLURM_CPUS_PER_TASK} -deffnm 02.equil_nvt
+echo "NVT equilibration ended"
+
+## Equilibracao NPT com barostato de Berendsen
+echo "Starting NPT equilibration (Berendsen)"
+gmx grompp -f 03.equil_npt.mdp -p ${name1}_in_water.top -c 02.equil_nvt.gro -o 03.equil_npt.tpr
+gmx mdrun -ntomp \${SLURM_CPUS_PER_TASK} -deffnm 03.equil_npt
+echo "NPT equilibration (Berendsen) ended"
+
+## Equilibracao NPT com barostato de Parrinello-Rahman
+echo "Starting NPT equilibration (Parrinello-Rahman)"
+gmx grompp -f 04.equil_npt2.mdp -p ${name1}_in_water.top -c 03.equil_npt.gro -o 04.equil_npt2.tpr
+gmx mdrun -ntomp \${SLURM_CPUS_PER_TASK} -deffnm 04.equil_npt2
+echo "NPT equilibration (Parrinello-Rahman) ended"
+
+## Producao
+echo "Starting production"
+gmx grompp -f 05.prod.mdp -p ${name1}_in_water.top -c 04.equil_npt2.gro -o 05.prod.tpr
+gmx mdrun -ntomp \${SLURM_CPUS_PER_TASK} -deffnm 05.prod
+echo "Production ended"
+
+echo "Simulation done!"
+EOF
+
 done
 
 cd ${root}
