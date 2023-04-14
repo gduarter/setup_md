@@ -43,7 +43,7 @@ o tutorial deste [link](https://github.com/gduarter/setup_md/blob/master/zzz.mar
 
 ## Organização dos arquivos
 
-O script `organize.sh` gerará três pastas:
+O script `organize_solution.sh` gerará três pastas:
 
 - `001.solutes`
 - `002.solvents`
