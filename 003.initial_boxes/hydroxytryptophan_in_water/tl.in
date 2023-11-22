@@ -1,0 +1,8 @@
+source leaprc.gaff2
+source leaprc.water.tip3p
+HYD = loadmol2 hydroxytryptophan.mol2
+loadamberparams hydroxytryptophan.frcmod
+solvatebox HYD TIP3PBOX 12.0
+setbox HYD centers 0.0
+saveAmberParm HYD hydroxytryptophan_in_water.prmtop hydroxytryptophan_in_water.inpcrd
+quit

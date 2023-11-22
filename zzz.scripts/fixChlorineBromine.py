@@ -1,16 +1,14 @@
 import sys
 import argparse
+from optparse import OptionParser 
 
-parser = argparse.ArgumentParser()
-parser.add_argument("-f", "--file", help="input MOL2 file",
-                    type=str, nargs=1, required=True)
-args = parser.parse_args()
-if len(args.file) != 1:
-    parser.print_help()
-    sys.exit()
+
+parser = OptionParser()
+parser.add_option("-f", "--file", help="input MOL2 file", dest="mol2file", metavar="FILE")
+(options, args) = parser.parse_args()
 
 # Open MOL2 file
-mol2filename = args.file[0]
+mol2filename = options.mol2file
 mol2file = open(mol2filename, "r+")
 
 # Make appropriate changes
